@@ -116,6 +116,33 @@ public class Converter {
             
             // INSERT YOUR CODE HERE
             
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject)parser.parse(jsonString);
+            
+            ArrayList<String> colHeaders = (ArrayList)jsonObject.get("colHeaders");
+            String[] colArray = new String[colHeaders.size()];
+            colArray = colHeaders.toArray(colArray);
+            
+            csvWriter.writeNext(colArray);
+            
+            ArrayList<String> rowHeaders = (ArrayList)jsonObject.get("rowHeaders");
+            ArrayList<ArrayList> data = (ArrayList<ArrayList>) jsonObject.get("data");
+            
+            for(int i = 0; i < rowHeaders.size(); ++i){
+                ArrayList<String> row = new ArrayList();
+                row.add(rowHeaders.get(i));
+                ArrayList rowData = data.get(i);
+                
+                for(int j = 0; j < rowData.size(); ++j){
+                    row.add(rowData.get(j).toString());
+                }
+                
+                String[] rowArray = new String[row.size()];
+                rowArray = row.toArray(rowArray);
+                csvWriter.writeNext(rowArray);
+            }
+            
+            results = writer.toString();
         }
         
         catch(Exception e) { return e.toString(); }
